@@ -55,6 +55,7 @@ export async function createExpense(data: ExpenseFormData): Promise<Expense> {
   const category = categories.find((c) => c.name === data.category);
 
   const expenseData = {
+    payer_name: data.payer_name,
     description: data.description,
     amount: data.amount,
     category_id: category?.id,

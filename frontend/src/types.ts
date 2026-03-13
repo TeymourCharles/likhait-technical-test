@@ -4,6 +4,7 @@
 
 export interface Expense {
   id: number;
+  payer_name: string;
   amount: number;
   description: string;
   category: string;
@@ -13,6 +14,7 @@ export interface Expense {
 }
 
 export interface ExpenseFormData {
+  payer_name: string;
   amount: string;
   description: string;
   category: string;
