@@ -8,6 +8,7 @@ import { TextField, SelectBox, Button } from "../vibes";
 import { useExpenseForm } from "../hooks/useExpenseForm";
 import { fetchCategories } from "../services/api";
 import { CategoryForm } from "./CategoryForm";
+import { Modal } from "../vibes";
 
 interface ExpenseFormProps {
   initialData?: Partial<ExpenseFormData>;
@@ -154,12 +155,17 @@ export function ExpenseForm({
           )}
         </div>
       </form>
-
-      <CategoryForm
-        isOpen={isCategoryFormOpen}
-        onClose={() => setIsCategoryFormOpen(false)}
-        onCategoryCreated={handleCategoryCreated}
-      />
+      
+       <Modal
+          isOpen={isCategoryFormOpen}
+          onClose={() => setIsCategoryFormOpen(false)}
+          title="Add New Category"
+        >
+        <CategoryForm
+          onCancel={() => setIsCategoryFormOpen(false)}
+          onCategoryCreated={handleCategoryCreated}
+        />
+      </Modal>
     </>
   );
 }

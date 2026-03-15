@@ -3,42 +3,19 @@ import { Button, TextField } from "../vibes";
 import { createCategory } from "../services/api";
 
 interface CategoryFormProps {
-  isOpen: boolean;
-  onClose: () => void;
+  onCancel: () => void;
   onCategoryCreated: (category: { id: number; name: string }) => void;
 }
 
 export function CategoryForm({
-  isOpen,
-  onClose,
+  onCancel,
   onCategoryCreated,
 }: CategoryFormProps) {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!isOpen) return null;
-
-  const overlayStyle: React.CSSProperties = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-  };
-
-  const modalStyle: React.CSSProperties = {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "1.5rem",
-    width: "100%",
-    maxWidth: "420px",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)",
+  const formStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     gap: "1rem",
@@ -48,6 +25,11 @@ export function CategoryForm({
     display: "flex",
     gap: "0.75rem",
     justifyContent: "flex-end",
+  };
+
+  const errorStyle: React.CSSProperties = {
+    color: "red",
+    fontSize: "0.875rem",
   };
 
   async function handleSubmit(e: React.FormEvent) {
@@ -67,7 +49,7 @@ export function CategoryForm({
       const createdCategory = await createCategory(trimmedName);
       onCategoryCreated(createdCategory);
       setName("");
-      onClose();
+      onCancel();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to create category",
@@ -81,31 +63,34 @@ export function CategoryForm({
     if (isSubmitting) return;
     setName("");
     setError("");
-    onClose();
+    onCancel();
   }
 
   return (
-    <div style={overlayStyle} onClick={handleClose}>
-      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
-        <h2 style={{ margin: 0 }}>Add Category</h2>
-
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div onClick={(e) => e.stopPropagation()}>
+        <form onSubmit={handleSubmit} style={formStyle}>
           <TextField
             label="Category Name"
             type="text"
             placeholder="Enter category name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (error) setError("");
+            }}
             fullWidth
             required
           />
 
           {error && (
-            <div style={{ color: "red", fontSize: "0.875rem" }}>{error}</div>
+            <div style={errorStyle}>{error}</div>
           )}
 
           <div style={buttonRowStyle}>
-            <Button
+            <Button type="submit" variant="primary" disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create Category"}
+            </Button>
+             <Button
               type="button"
               variant="secondary"
               onClick={handleClose}
@@ -113,12 +98,8 @@ export function CategoryForm({
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" disabled={isSubmitting}>
-              {isSubmitting ? "Creating..." : "Create Category"}
-            </Button>
           </div>
         </form>
       </div>
-    </div>
   );
 }
