@@ -16,7 +16,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
     payer_name: initialData?.payer_name || "",
     amount: initialData?.amount || "",
     description: initialData?.description || "",
-    category: initialData?.category || "",
+    category_id: initialData?.category_id || "",
     date: initialData?.date || formatDate(new Date()),
   });
 
@@ -46,8 +46,8 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
       newErrors.description = "Description is required";
     }
 
-    if (!formData.category) {
-      newErrors.category = "Category is required";
+    if (!formData.category_id) {
+      newErrors.category_id = "Category is required";
     }
 
     if (!formData.date) {
@@ -73,7 +73,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
         payer_name: "",
         amount: "",
         description: "",
-        category: "",
+        category_id: null,
         date: formatDate(new Date()),
       });
       setErrors({});
@@ -89,7 +89,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
       payer_name: initialData?.payer_name || "",
       amount: initialData?.amount || "",
       description: initialData?.description || "",
-      category: initialData?.category || "",
+      category_id: initialData?.category_id || null,
       date: initialData?.date || formatDate(new Date()),
     });
     setErrors({});
