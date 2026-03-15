@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextField } from "../vibes";
 import { createCategory } from "../services/api";
-
-interface Category {
-  id: number;
-  name: string;
-  emoji: string;
-}
+import type { Category } from "../types";
 
 interface CategoryFormProps {
   onCancel: () => void;

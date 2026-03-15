@@ -2,7 +2,7 @@
  * API service for communicating with the backend
  */
 
-import { Expense, ExpenseFormData } from "../types";
+import { Category, CreateCategoryData, Expense, ExpenseFormData } from "../types";
 
 const API_BASE_URL = "http://localhost:3000/api";
 
@@ -76,14 +76,7 @@ export async function createExpense(data: ExpenseFormData): Promise<Expense> {
   return response.json();
 }
 
-export async function createCategory(category: {
-  name: string;
-  emoji: string;
-}): Promise<{
-  id: number;
-  name: string;
-  emoji: string;
-}> {
+export async function createCategory(category: CreateCategoryData): Promise<Category> {
   const response = await fetch(`${API_BASE_URL}/categories`, {
     method: "POST",
     headers: {
