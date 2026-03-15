@@ -11,12 +11,19 @@ interface UseExpenseFormProps {
   onSubmit: (data: ExpenseFormData) => Promise<void>;
 }
 
+function getTodayDate(): string {
+  return formatDate(new Date());
+}
+
+const FUTURE_DATE_ERROR =
+  "Expense date cannot be in the future. Please select today or a past date.";
+
 export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
   const [formData, setFormData] = useState<ExpenseFormData>({
     amount: initialData?.amount || "",
     description: initialData?.description || "",
     category: initialData?.category || "",
-    date: initialData?.date || formatDate(new Date()),
+    date: initialData?.date || getTodayDate(),
   });
 
   const [errors, setErrors] = useState<Partial<ExpenseFormData>>({});
@@ -25,6 +32,20 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
   const handleChange = (field: keyof ExpenseFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error for this field when user starts typing
+    if (field === "date") {
+      if (!value) {
+        setErrors((prev) => ({ ...prev, date: "Date is required" }));
+        return;
+      }
+
+      if (value > getTodayDate()) {
+        setErrors((prev) => ({
+          ...prev,
+          date: FUTURE_DATE_ERROR,
+        }));
+        return;
+      }
+    }
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -47,6 +68,8 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
 
     if (!formData.date) {
       newErrors.date = "Date is required";
+    } else if (formData.date > getTodayDate()) {
+      newErrors.date = FUTURE_DATE_ERROR;
     }
 
     setErrors(newErrors);
@@ -68,7 +91,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
         amount: "",
         description: "",
         category: "",
-        date: formatDate(new Date()),
+        date: getTodayDate(),
       });
       setErrors({});
     } catch (error) {
@@ -83,7 +106,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
       amount: initialData?.amount || "",
       description: initialData?.description || "",
       category: initialData?.category || "",
-      date: initialData?.date || formatDate(new Date()),
+      date: initialData?.date || getTodayDate(),
     });
     setErrors({});
   };

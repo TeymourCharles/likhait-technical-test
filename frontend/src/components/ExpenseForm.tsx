@@ -15,6 +15,8 @@ interface ExpenseFormProps {
   submitLabel?: string;
 }
 
+const today = new Date().toISOString().split("T")[0];
+
 export function ExpenseForm({
   initialData,
   onSubmit,
@@ -87,6 +89,7 @@ export function ExpenseForm({
         error={errors.date}
         fullWidth
         required
+        max={today}
       />
 
       <div style={buttonGroupStyle}>
