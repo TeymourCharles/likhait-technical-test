@@ -4,18 +4,21 @@
 
 export interface Expense {
   id: number;
+  payer_name: string;
   amount: number;
   description: string;
   category: string;
+  category_id: number;
   date: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface ExpenseFormData {
+  payer_name: string;
   amount: string;
   description: string;
-  category: string;
+  category_id: string;
   date: string;
 }
 
